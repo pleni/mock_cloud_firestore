@@ -8,7 +8,7 @@ import 'package:mock_cloud_firestore/factories.dart';
 import 'package:mock_cloud_firestore/mock_types.dart';
 import 'package:mockito/mockito.dart';
 
-class MockCloudFirestore {
+class MockCloudFirestore extends Firestore {
   Map<String, dynamic> sourceParsed;
   Map<String, StreamController<QuerySnapshot>> snapshotStreams = {};
   Map<String, MockCollectionReference> collectionReferenceCache = {};
