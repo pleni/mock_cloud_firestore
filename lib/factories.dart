@@ -31,8 +31,9 @@ MockQuerySnapshot createMockQuerySnapshot(Map<String, dynamic> colData,
 MockDocumentReference createDocumentReference(Map<String, dynamic> value) {
   MockDocumentReference r = MockDocumentReference();
   MockDocumentSnapshot s = MockDocumentSnapshot();
+  MockSnapshotMetadata sm = createSnapshotMetadata(false, false);
   when(s.data).thenReturn(value);
-  when(s.metadata).thenReturn(SnapshotMetadata._(false, false));
+  when(s.metadata).thenReturn(sm);
   when(r.get()).thenAnswer((_) => Future.value(s));
   return r;
 }
@@ -52,4 +53,12 @@ MockDocumentSnapshot createDocumentSnapshot(Map<String, dynamic> value) {
   MockDocumentSnapshot ds = MockDocumentSnapshot();
   when(ds.data).thenReturn(value);
   return ds;
+}
+
+MockSnapshotMetadata createSnapshotMetadata(
+    bool isFromCache, bool hasPendingWrites) {
+  MockSnapshotMetadata sm = MockSnapshotMetadata();
+  when(sm.isFromCache).thenReturn(isFromCache);
+  when(sm.hasPendingWrites).thenReturn(hasPendingWrites);
+  return sm;
 }

@@ -6,6 +6,8 @@ import 'package:mockito/mockito.dart';
 
 class MockFirestoreInstance extends Mock implements Firestore {}
 
+class MockSnapshotMetadata extends Mock implements SnapshotMetadata {}
+
 class MockQuerySnapshot extends Mock implements QuerySnapshot {}
 
 class MockCollectionReference extends Mock implements CollectionReference {
@@ -27,15 +29,14 @@ class MockCollectionReference extends Mock implements CollectionReference {
     Map<String, dynamic> newColData = Map<String, dynamic>.from(colData);
     newColData[doc["id"]] = doc;
     MockQuerySnapshot mqs =
-    createMockQuerySnapshot(newColData, modified: [doc]);
+        createMockQuerySnapshot(newColData, modified: [doc]);
     controller.add(mqs);
   }
 
   simulateRemoveFromServer(String id) {
     Map<String, dynamic> newColData = Map<String, dynamic>.from(colData);
     Map<String, dynamic> doc = newColData.remove(id);
-    MockQuerySnapshot mqs =
-    createMockQuerySnapshot(newColData, removed: [doc]);
+    MockQuerySnapshot mqs = createMockQuerySnapshot(newColData, removed: [doc]);
     controller.add(mqs);
   }
 }
