@@ -61,7 +61,6 @@ void main() {
     MockCollectionReference col1 = mcf.collection("projects");
     MockCollectionReference col2 = mcf.collection("projects");
     expect(col1, col2);
-
   });
   test('get document from collection', () async {
     MockCollectionReference col = mcf.collection("projects");
@@ -121,7 +120,7 @@ void main() {
     MockCollectionReference col = mcf.collection("projects");
 
     col.snapshots().listen((QuerySnapshot snapshot) {
-      if(snapshot.documentChanges.length > 0) {
+      if (snapshot.documentChanges.length > 0) {
         DocumentSnapshot doc = snapshot.documents[0];
         expect(doc.data, isNotNull);
 
@@ -141,7 +140,7 @@ void main() {
     MockCollectionReference col = mcf.collection("projects");
 
     col.snapshots().listen((QuerySnapshot snapshot) {
-      if(snapshot.documentChanges.length > 0) {
+      if (snapshot.documentChanges.length > 0) {
         DocumentSnapshot doc = snapshot.documents[0];
         expect(doc.data, isNotNull);
 
@@ -158,7 +157,7 @@ void main() {
     MockCollectionReference col = mcf.collection("projects");
 
     col.snapshots().listen((QuerySnapshot snapshot) {
-      if(snapshot.documentChanges.length > 0) {
+      if (snapshot.documentChanges.length > 0) {
         expect(snapshot.documents.length, 0);
 
         DocumentChange change = snapshot.documentChanges[0];
@@ -168,5 +167,4 @@ void main() {
 
     col.simulateRemoveFromServer("1");
   });
-
 }

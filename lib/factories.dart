@@ -51,7 +51,9 @@ MockDocumentChange createDocumentChange(
 
 MockDocumentSnapshot createDocumentSnapshot(Map<String, dynamic> value) {
   MockDocumentSnapshot ds = MockDocumentSnapshot();
+  MockSnapshotMetadata sm = createSnapshotMetadata(false, false);
   when(ds.data).thenReturn(value);
+  when(ds.metadata).thenReturn(sm);
   return ds;
 }
 
