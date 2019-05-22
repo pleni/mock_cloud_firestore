@@ -3,7 +3,9 @@ import 'package:mock_cloud_firestore/mock_types.dart';
 import 'package:mockito/mockito.dart';
 
 MockQuerySnapshot createMockQuerySnapshot(Map<String, dynamic> colData,
-    {List<Map<String, dynamic>> added = const [], modified = const [], removed = const []}) {
+    {List<Map<String, dynamic>> added = const [],
+    modified = const [],
+    removed = const []}) {
   MockQuerySnapshot s = MockQuerySnapshot();
   List<MockDocumentChange> docChangeList = [];
   List<MockDocumentSnapshot> docSnapList = [];
@@ -13,12 +15,12 @@ MockQuerySnapshot createMockQuerySnapshot(Map<String, dynamic> colData,
   });
   added.forEach((value) {
     MockDocumentChange dc =
-    createDocumentChange(value, DocumentChangeType.added);
+        createDocumentChange(value, DocumentChangeType.added);
     docChangeList.add(dc);
   });
   modified.forEach((value) {
     MockDocumentChange dc =
-    createDocumentChange(value, DocumentChangeType.modified);
+        createDocumentChange(value, DocumentChangeType.modified);
     docChangeList.add(dc);
   });
   when(s.documentChanges).thenAnswer((_) => docChangeList);
@@ -26,10 +28,11 @@ MockQuerySnapshot createMockQuerySnapshot(Map<String, dynamic> colData,
   return s;
 }
 
-MockDocumentReference createDocumentReferance(Map<String, dynamic> value) {
+MockDocumentReference createDocumentReference(Map<String, dynamic> value) {
   MockDocumentReference r = MockDocumentReference();
   MockDocumentSnapshot s = MockDocumentSnapshot();
   when(s.data).thenReturn(value);
+  when(s.metadata).thenReturn(SnapshotMetadata._(false, false));
   when(r.get()).thenAnswer((_) => Future.value(s));
   return r;
 }

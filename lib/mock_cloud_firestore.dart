@@ -29,7 +29,7 @@ class MockCloudFirestore extends Firestore {
 
     when(mcr.add(any)).thenAnswer((Invocation inv) {
       var value = inv.positionalArguments[0];
-      MockDocumentReference mdr = createDocumentReferance(value);
+      MockDocumentReference mdr = createDocumentReference(value);
 
       MockQuerySnapshot mqs = createMockQuerySnapshot(colData, added: [value]);
       mcr.controller.add(mqs);
@@ -37,13 +37,13 @@ class MockCloudFirestore extends Firestore {
       return Future.value(mdr);
     });
 
-    MockDocumentReference mdr = createDocumentReferance(null);
+    MockDocumentReference mdr = createDocumentReference(null);
     when(mcr.document(any)).thenAnswer((_) => mdr);
     if (colData == null) {
       return mcr;
     }
     colData.forEach((String key, dynamic value) {
-      MockDocumentReference mdr = createDocumentReferance(value);
+      MockDocumentReference mdr = createDocumentReference(value);
       when(mcr.document(key)).thenAnswer((_) => mdr);
     });
 
