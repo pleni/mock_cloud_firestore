@@ -28,13 +28,18 @@ MockQuerySnapshot createMockQuerySnapshot(Map<String, dynamic> colData,
   return s;
 }
 
-MockDocumentReference createDocumentReference(Map<String, dynamic> value) {
+MockDocumentReference createDocumentReferance(Map<String, dynamic> value) {
   MockDocumentReference r = MockDocumentReference();
   MockDocumentSnapshot s = MockDocumentSnapshot();
-  MockSnapshotMetadata sm = createSnapshotMetadata(false, false);
   when(s.data).thenReturn(value);
-  when(s.metadata).thenReturn(sm);
   when(r.get()).thenAnswer((_) => Future.value(s));
+  when(r.snapshots()).thenAnswer((_) {
+    Future<Null>.delayed(Duration.zero, () {
+      r.controller.add(s);
+    });
+    return r.controller.stream;
+  });
+
   return r;
 }
 
@@ -51,16 +56,46 @@ MockDocumentChange createDocumentChange(
 
 MockDocumentSnapshot createDocumentSnapshot(Map<String, dynamic> value) {
   MockDocumentSnapshot ds = MockDocumentSnapshot();
-  MockSnapshotMetadata sm = createSnapshotMetadata(false, false);
   when(ds.data).thenReturn(value);
-  when(ds.metadata).thenReturn(sm);
   return ds;
 }
 
-MockSnapshotMetadata createSnapshotMetadata(
-    bool isFromCache, bool hasPendingWrites) {
-  MockSnapshotMetadata sm = MockSnapshotMetadata();
-  when(sm.isFromCache).thenReturn(isFromCache);
-  when(sm.hasPendingWrites).thenReturn(hasPendingWrites);
-  return sm;
+MockCollectionReference createCollectionReference(String collectionName,
+    Map<String, dynamic> colData, Map<String, dynamic> whereData) {
+  MockCollectionReference mcr =
+      MockCollectionReference(collectionName, colData, whereData);
+
+  when(mcr.add(any)).thenAnswer((Invocation inv) {
+    var value = inv.positionalArguments[0];
+    MockDocumentReference mdr = createDocumentReferance(value);
+
+    MockQuerySnapshot mqs = createMockQuerySnapshot(colData, added: [value]);
+    mcr.controller.add(mqs);
+
+    return Future.value(mdr);
+  });
+
+  MockDocumentReference mdr = createDocumentReferance(null);
+  when(mcr.document(any)).thenAnswer((_) => mdr);
+  if (colData == null) {
+    return mcr;
+  }
+  colData.forEach((String key, dynamic value) {
+    MockDocumentReference mdr = createDocumentReferance(value);
+    when(mcr.document(key)).thenAnswer((_) => mdr);
+  });
+
+  MockQuerySnapshot mqs = createMockQuerySnapshot(colData);
+
+  when(mcr.snapshots()).thenAnswer((_) {
+    Future<Null>.delayed(Duration.zero, () {
+      mcr.controller.add(mqs);
+    });
+    return mcr.controller.stream;
+  });
+  when(mcr.getDocuments()).thenAnswer((_) {
+    return Future<MockQuerySnapshot>.delayed(Duration.zero, () => mqs);
+  });
+
+  return mcr;
 }

@@ -24,7 +24,18 @@ void main() {
     "2": {
       "id": "2",
       "title": "test project 2"
-    }    
+    },
+    "__where__": {
+      "id == 2": {
+       "2": {"id": "2", "description": "test desctiontion 2"}
+     },
+      "id < 5 & id > 2": {
+       "2": {"id": "2", "description": "test desctiontion 2"}
+     },
+     "id array-contains [\\"1\\",\\"2\\"]": {
+       "2": {"id": "2", "description": "test desctiontion 2"}
+     }
+   }    
   },
   "tasks": {
     "1": {
@@ -166,5 +177,32 @@ void main() {
     });
 
     col.simulateRemoveFromServer("1");
+  });
+
+  test('using where on collection', () async {
+    MockCollectionReference col = mcf.collection("projects");
+    Query q = col.where("id", isEqualTo: "2");
+    expect(q, isNotNull);
+    QuerySnapshot first = await q.snapshots().first;
+    MockDocumentSnapshot docSnap = first.documents[0];
+    expect(docSnap.data["id"], "2");
+  });
+
+  test('using where on collection, multiple contition', () async {
+    MockCollectionReference col = mcf.collection("projects");
+    Query q = col.where("id", isGreaterThan: "2", isLessThan: "5");
+    expect(q, isNotNull);
+    QuerySnapshot first = await q.snapshots().first;
+    MockDocumentSnapshot docSnap = first.documents[0];
+    expect(docSnap.data["id"], "2");
+  });
+
+  test('using where on collection, array-contains', () async {
+    MockCollectionReference col = mcf.collection("projects");
+    Query q = col.where("id", arrayContains: ["1", "2"]);
+    expect(q, isNotNull);
+    QuerySnapshot first = await q.snapshots().first;
+    MockDocumentSnapshot docSnap = first.documents[0];
+    expect(docSnap.data["id"], "2");
   });
 }
