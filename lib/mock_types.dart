@@ -83,6 +83,16 @@ class MockCollectionReference extends Mock implements CollectionReference {
     }
     return null;
   }
+
+  Query orderBy(String field, {bool descending = false}) {
+    return createCollectionReference(
+        this.collectionName, whereData, this.whereData);
+  }
+
+  Query limit(int length) {
+    return createCollectionReference(
+        this.collectionName, whereData, this.whereData);
+  }
 }
 
 class MockDocumentReference extends Mock implements DocumentReference {
