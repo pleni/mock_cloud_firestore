@@ -85,13 +85,11 @@ class MockCollectionReference extends Mock implements CollectionReference {
   }
 
   Query orderBy(String field, {bool descending = false}) {
-    return createCollectionReference(
-        this.collectionName, whereData, this.whereData);
+    return this;
   }
 
   Query limit(int length) {
-    return createCollectionReference(
-        this.collectionName, whereData, this.whereData);
+    return this;
   }
 }
 
